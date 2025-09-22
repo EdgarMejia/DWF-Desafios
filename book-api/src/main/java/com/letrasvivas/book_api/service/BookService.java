@@ -31,11 +31,17 @@ public class BookService {
     }
 
     public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
+        // Mejorado: Comprobar si el libro existe antes de eliminarlo
+        if (bookRepository.existsById(id)) {
+            bookRepository.deleteById(id);
+        } else {
+            // Se puede lanzar una excepción personalizada aquí,
+            // que luego será capturada por el GlobalExceptionHandler.
+            throw new RuntimeException("Book with id " + id + " not found.");
+        }
     }
 
     public List<Book> findBooksByTitle(String title) {
         return bookRepository.findByTitleContainingIgnoreCase(title);
     }
-
 }
